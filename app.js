@@ -1,1 +1,0 @@
-const state={step:0}; console.log('Bandura Atelier ready');
