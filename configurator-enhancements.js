@@ -11,9 +11,13 @@
     if(selected&&labels[index])state[labels[index]]=clean(selected.querySelector('strong')?.textContent);
     Object.entries(state).forEach(([k,v])=>{if(v)card.dataset[k]=slug(v)});
     const chips=Object.entries(state).filter(([,v])=>v).map(([k,v])=>`<span class="preview-badge preview-badge-${k}">${v}</span>`).join('');
-    const ornament=state.ornament&&!/^minimal$/i.test(state.ornament)&&!/^none$/i.test(state.ornament)?'<span class="preview-ornament">✦</span>':'';
-    const electronics=state.electronics&&!/^none$/i.test(state.electronics)?'<span class="preview-pickup">●</span>':'';
-    const engraving=state.engraving&&!/^none$/i.test(state.engraving)?`<span class="preview-engraving">${/^name$/i.test(state.engraving)?'A':'✧'}</span>`:'';
+    const ornamentKey=slug(state.ornament);
+    const ornamentSymbols={tryzub:'△',vyshyvanka:'◇',petrykivka:'✿',custom:'✧'};
+    const ornament=state.ornament&&!/^minimal$/i.test(state.ornament)&&!/^none$/i.test(state.ornament)?`<span class="preview-ornament preview-ornament-${ornamentKey}">${ornamentSymbols[ornamentKey]||'✦'}</span>`:'';
+    const electronicsKey=slug(state.electronics);
+    const electronics=state.electronics&&!/^none$/i.test(state.electronics)?`<span class="preview-pickup preview-pickup-${electronicsKey}" aria-hidden="true"><i></i></span>`:'';
+    const engravingKey=slug(state.engraving);
+    const engraving=state.engraving&&!/^none$/i.test(state.engraving)?`<span class="preview-engraving preview-engraving-${engravingKey}">${/^name$/i.test(state.engraving)?'A':'✧'}</span>`:'';
     const strings=state.strings&&!/^none$/i.test(state.strings)?'<span class="preview-string-field"></span>':'';
     const caseOverlay=state.case&&!/^none$/i.test(state.case)?`<span class="preview-case preview-case-${slug(state.case)}"></span>`:'';
     const modelFrame=state.model?`<span class="preview-model-marker preview-model-${slug(state.model)}"></span>`:'';
