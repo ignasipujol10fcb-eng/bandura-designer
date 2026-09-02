@@ -13,9 +13,11 @@
     const chips=Object.entries(state).filter(([,v])=>v).map(([k,v])=>`<span class="preview-badge preview-badge-${k}">${v}</span>`).join('');
     const ornament=state.ornament&&!/^minimal$/i.test(state.ornament)&&!/^none$/i.test(state.ornament)?'<span class="preview-ornament">✦</span>':'';
     const electronics=state.electronics&&!/^none$/i.test(state.electronics)?'<span class="preview-pickup">●</span>':'';
-    const engraving=state.engraving&&!/^none$/i.test(state.engraving)?'<span class="preview-engraving">✧</span>':'';
+    const engraving=state.engraving&&!/^none$/i.test(state.engraving)?`<span class="preview-engraving">${/^name$/i.test(state.engraving)?'A':'✧'}</span>`:'';
     const strings=state.strings&&!/^none$/i.test(state.strings)?'<span class="preview-string-field"></span>':'';
-    layer.innerHTML=`${strings}${ornament}${electronics}${engraving}<span class="preview-badges">${chips}</span>`;
+    const caseOverlay=state.case&&!/^none$/i.test(state.case)?`<span class="preview-case preview-case-${slug(state.case)}"></span>`:'';
+    const modelFrame=state.model?`<span class="preview-model-marker preview-model-${slug(state.model)}"></span>`:'';
+    layer.innerHTML=`${caseOverlay}${modelFrame}${strings}${ornament}${electronics}${engraving}<span class="preview-badges">${chips}</span>`;
     const woodFilters={walnut:'sepia(.18) saturate(1.15) brightness(.92)',maple:'sepia(.05) saturate(.72) brightness(1.12)',cherry:'sepia(.35) saturate(1.55) hue-rotate(-12deg) brightness(.92)',ash:'sepia(.08) saturate(.55) brightness(1.08)',wenge:'sepia(.25) saturate(.8) brightness(.62)'};
     const finishFilters={natural:'',honey:'brightness(1.02) saturate(1.12)','dark-walnut':'brightness(.76) contrast(1.06)',black:'grayscale(.65) brightness(.58) contrast(1.12)'};
     const filter=`${woodFilters[slug(state.wood)]||''} ${finishFilters[slug(state.finish)]||''}`.trim();
