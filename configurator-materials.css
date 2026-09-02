@@ -1,0 +1,15 @@
+/* Visible material layer: the real instrument is rendered by .instrument-card::before. */
+.instrument-card::before{transition:filter .45s ease,transform .45s ease}
+.instrument-card[data-wood="walnut"]::before{filter:sepia(.18) saturate(1.15) brightness(.92) drop-shadow(15px 22px 22px #0009)}
+.instrument-card[data-wood="maple"]::before{filter:sepia(.05) saturate(.72) brightness(1.12) drop-shadow(15px 22px 22px #0009)}
+.instrument-card[data-wood="cherry"]::before{filter:sepia(.35) saturate(1.55) hue-rotate(-12deg) brightness(.92) drop-shadow(15px 22px 22px #0009)}
+.instrument-card[data-wood="ash"]::before{filter:sepia(.08) saturate(.55) brightness(1.08) drop-shadow(15px 22px 22px #0009)}
+.instrument-card[data-wood="wenge"]::before{filter:sepia(.25) saturate(.8) brightness(.62) drop-shadow(15px 22px 22px #0009)}
+.instrument-card[data-wood="walnut"][data-finish="honey"]::before{filter:sepia(.18) saturate(1.28) brightness(1.02) drop-shadow(15px 22px 22px #0009)}
+.instrument-card[data-wood="maple"][data-finish="honey"]::before{filter:sepia(.05) saturate(.88) brightness(1.14) drop-shadow(15px 22px 22px #0009)}
+.instrument-card[data-wood="cherry"][data-finish="honey"]::before{filter:sepia(.38) saturate(1.6) brightness(1) drop-shadow(15px 22px 22px #0009)}
+.instrument-card[data-wood="ash"][data-finish="honey"]::before{filter:sepia(.08) saturate(.7) brightness(1.12) drop-shadow(15px 22px 22px #0009)}
+.instrument-card[data-wood="wenge"][data-finish="honey"]::before{filter:sepia(.25) saturate(.92) brightness(.68) drop-shadow(15px 22px 22px #0009)}
+.instrument-card[data-wood][data-finish="dark-walnut"]::before{filter:sepia(.22) saturate(.92) brightness(.72) contrast(1.08) drop-shadow(15px 22px 22px #0009)}
+.instrument-card[data-wood][data-finish="black"]::before{filter:grayscale(.68) brightness(.55) contrast(1.12) drop-shadow(15px 22px 22px #0009)}
+@media(prefers-reduced-motion:reduce){.instrument-card::before{transition:none}}
