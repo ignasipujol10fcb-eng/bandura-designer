@@ -26,7 +26,9 @@
   const optionName = (step, index, lang) => {
     const row = window.__banduraData?.[step];
     const raw = row?.[3]?.[index]?.split('|')[0] || '';
-    return raw;
+    /* Prefer the existing translated option label so the persistent summary
+       stays in the visitor's selected language instead of reverting to English. */
+    return T?.[lang]?.opts?.[raw]?.[0] || T?.en?.opts?.[raw]?.[0] || raw;
   };
   const render = () => {
     const lang = document.documentElement.lang || 'en';
