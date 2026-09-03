@@ -8,6 +8,7 @@
     document.documentElement.lang = lang;
     document.documentElement.dir = rtl.has(lang) ? 'rtl' : 'ltr';
     try { localStorage.setItem('bandura-language', lang); } catch (_) {}
+    document.dispatchEvent(new CustomEvent('bandura:languagechange', { detail: { lang } }));
   };
   let saved = '';
   try { saved = localStorage.getItem('bandura-language') || ''; } catch (_) {}
