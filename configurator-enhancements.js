@@ -71,4 +71,8 @@
   total.src='configurator-total.js';
   total.defer=true;
   document.body.appendChild(total);
+  const keyboard=document.createElement('script');
+  keyboard.src='configurator-keyboard.js';
+  keyboard.defer=true;
+  document.body.appendChild(keyboard);
 })();
