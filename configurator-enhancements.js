@@ -67,4 +67,8 @@
   persistence.src='configurator-persistence.js';
   persistence.defer=true;
   document.body.appendChild(persistence);
+  const total=document.createElement('script');
+  total.src='configurator-total.js';
+  total.defer=true;
+  document.body.appendChild(total);
 })();
