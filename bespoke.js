@@ -32,5 +32,5 @@
     if(file&&navigator.canShare){try{if(navigator.canShare({files:[file]})){await navigator.share({title:'Bandura Atelier — Bespoke Design',text:desc||'Bespoke bandura design enquiry',files:[file]});close();return}}catch(err){if(err&&err.name==='AbortError')return}}
     window.location.href=`mailto:atelier@bandura-atelier.com?subject=${subject}&body=${body}`;close();
   }
-  build();document.addEventListener('click',e=>{const target=e.target.closest('.bespoke-copy .btn, .contact .btn, .hero-buttons .text-link');if(target)open(e)});window.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal&&!modal.hidden)close()});window.addEventListener('bandura-language-change',paint);
+  build();document.addEventListener('click',e=>{const target=e.target.closest('.bespoke-copy .btn, .contact .btn, .hero-buttons .text-link');if(target)open(e)});window.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal&&!modal.hidden)close()});document.addEventListener('bandura:languagechange',paint);
 })();
