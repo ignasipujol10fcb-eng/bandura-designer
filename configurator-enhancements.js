@@ -75,4 +75,8 @@
   keyboard.src='configurator-keyboard.js';
   keyboard.defer=true;
   document.body.appendChild(keyboard);
+  const performance=document.createElement('script');
+  performance.src='image-performance.js';
+  performance.defer=true;
+  document.body.appendChild(performance);
 })();
