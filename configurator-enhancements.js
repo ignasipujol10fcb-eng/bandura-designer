@@ -7,11 +7,20 @@
   if(!layer){layer=document.createElement('div');layer.className='config-visual-layer';layer.setAttribute('aria-hidden','true');card.appendChild(layer)}
   const clean=v=>(v||'').trim(),slug=v=>clean(v).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
   const inscriptionCopy={en:['Personal inscription','Up to 30 characters','Your text will appear on the live preview.'],es:['Inscripción personal','Hasta 30 caracteres','Tu texto aparecerá en la vista previa.'],uk:['Особистий напис','До 30 символів','Ваш текст з’явиться у попередньому перегляді.'],it:['Incisione personale','Fino a 30 caratteri','Il testo apparirà nell’anteprima.'],fr:['Inscription personnelle','30 caractères maximum','Votre texte apparaîtra dans l’aperçu.'],de:['Persönliche Gravur','Bis zu 30 Zeichen','Ihr Text erscheint in der Live-Vorschau.'],zh:['个性刻字','最多30个字符','文字会显示在实时预览中。'],ja:['パーソナル刻印','30文字まで','入力した文字がプレビューに表示されます。'],he:['חריטה אישית','עד 30 תווים','הטקסט יופיע בתצוגה המקדימה.']};
+  function localizeInscriptionField(){
+    const wrap=document.getElementById('customInscriptionField');
+    if(!wrap)return;
+    const lang=document.documentElement.lang||'en',copy=inscriptionCopy[lang]||inscriptionCopy.en,input=wrap.querySelector('input');
+    const label=wrap.querySelector('label'),help=wrap.querySelector('small');
+    if(label)label.textContent=copy[0];
+    if(input){input.placeholder=copy[1];input.setAttribute('aria-label',copy[0]);}
+    if(help)help.textContent=copy[2];
+  }
   function ensureInscriptionField(){
     const custom=labels[7]&&state[labels[7]]==='Custom inscription';
     const existing=document.getElementById('customInscriptionField');
     if(!custom){if(existing)existing.remove();return}
-    if(existing)return;
+    if(existing){localizeInscriptionField();return}
     const lang=document.documentElement.lang||'en',copy=inscriptionCopy[lang]||inscriptionCopy.en;
     const wrap=document.createElement('div');wrap.className='custom-inscription-field';wrap.id='customInscriptionField';
     wrap.innerHTML=`<label for="customInscription">${copy[0]}</label><input id="customInscription" name="customInscription" type="text" maxlength="30" autocomplete="off" placeholder="${copy[1]}" aria-describedby="customInscriptionHelp"><small id="customInscriptionHelp">${copy[2]}</small>`;
@@ -52,5 +61,6 @@
   content.addEventListener('click',()=>requestAnimationFrame(refresh));
   document.getElementById('nextBtn')?.addEventListener('click',()=>requestAnimationFrame(refresh));
   document.getElementById('backBtn')?.addEventListener('click',()=>requestAnimationFrame(refresh));
+  document.addEventListener('bandura:languagechange',localizeInscriptionField);
   refresh();
 })();
