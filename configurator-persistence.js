@@ -31,7 +31,11 @@
 
   const saveInscription = () => {
     const input = document.getElementById('customInscription');
-    if (input) write({inscription: input.value.slice(0, 30)});
+    if (input) {
+      const value = input.value.slice(0, 30);
+      /* Keep the original key for compatibility and mirror the preview's state key. */
+      write({inscription: value, inscriptionText: value});
+    }
   };
 
   content.addEventListener('click', (event) => {
@@ -64,8 +68,9 @@
           if (targetStep < steps[steps.length - 1]) next.click();
           else {
             const input = document.getElementById('customInscription');
-            if (input && saved.inscription) {
-              input.value = saved.inscription.slice(0, 30);
+            const inscription = saved.inscriptionText || saved.inscription;
+            if (input && inscription) {
+              input.value = inscription.slice(0, 30);
               input.dispatchEvent(new Event('input', {bubbles: true}));
             }
           }
