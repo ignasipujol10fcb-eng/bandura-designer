@@ -63,4 +63,8 @@
   document.getElementById('backBtn')?.addEventListener('click',()=>requestAnimationFrame(refresh));
   document.addEventListener('bandura:languagechange',localizeInscriptionField);
   refresh();
+  const persistence=document.createElement('script');
+  persistence.src='configurator-persistence.js';
+  persistence.defer=true;
+  document.body.appendChild(persistence);
 })();
