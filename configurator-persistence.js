@@ -18,6 +18,7 @@
   const write = (patch) => {
     try {
       localStorage.setItem(KEY, JSON.stringify({...read(), ...patch}));
+      document.dispatchEvent(new CustomEvent('bandura:configchange'));
     } catch (_) {}
   };
 
