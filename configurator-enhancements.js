@@ -5,9 +5,12 @@
   const labels=['model','strings','wood','finish','ornament','electronics','case','engraving'],state=Object.create(null);
   let layer=card.querySelector('.config-visual-layer');
   if(!layer){layer=document.createElement('div');layer.className='config-visual-layer';layer.setAttribute('aria-hidden','true');card.appendChild(layer)}
+  let live=document.getElementById('configPreviewStatus');
+  if(!live){live=document.createElement('p');live.id='configPreviewStatus';live.className='sr-only';live.setAttribute('role','status');live.setAttribute('aria-live','polite');live.setAttribute('aria-atomic','true');card.parentElement?.appendChild(live)}
   const clean=v=>(v||'').trim(),slug=v=>clean(v).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
   const escapeHtml=v=>String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   const inscriptionCopy={en:['Personal inscription','Up to 30 characters','Your text will appear on the live preview.'],es:['Inscripción personal','Hasta 30 caracteres','Tu texto aparecerá en la vista previa.'],uk:['Особистий напис','До 30 символів','Ваш текст з’явиться у попередньому перегляді.'],it:['Incisione personale','Fino a 30 caratteri','Il testo apparirà nell’anteprima.'],fr:['Inscription personnelle','30 caractères maximum','Votre texte apparaîtra dans l’aperçu.'],de:['Persönliche Gravur','Bis zu 30 Zeichen','Ihr Text erscheint in der Live-Vorschau.'],zh:['个性刻字','最多30个字符','文字会显示在实时预览中。'],ja:['パーソナル刻印','30文字まで','入力した文字がプレビューに表示されます。'],he:['חריטה אישית','עד 30 תווים','הטקסט יופיע בתצוגה המקדימה.']};
+  const statusCopy={en:['Preview updated','Your live bandura preview now reflects','choices.'],es:['Vista previa actualizada','La vista previa de tu bandura ahora refleja','decisiones.'],uk:['Попередній перегляд оновлено','Попередній перегляд бандури враховує','виборів.'],it:['Anteprima aggiornata','L’anteprima della tua bandura ora riflette','scelte.'],fr:['Aperçu mis à jour','L’aperçu de votre bandura reflète maintenant','choix.'],de:['Vorschau aktualisiert','Die Live-Vorschau Ihrer Bandura berücksichtigt jetzt','Auswahlen.'],zh:['预览已更新','实时预览现已反映您的','项选择。'],ja:['プレビューを更新しました','バンドゥーラのライブプレビューに選択した','項目が反映されました。'],he:['התצוגה המקדימה עודכנה','התצוגה המקדימה של הבנדורה משקפת כעת את','הבחירות.']};
   function localizeInscriptionField(){
     const wrap=document.getElementById('customInscriptionField');
     if(!wrap)return;
@@ -16,6 +19,12 @@
     if(label)label.textContent=copy[0];
     if(input){input.placeholder=copy[1];input.setAttribute('aria-label',copy[0]);}
     if(help)help.textContent=copy[2];
+  }
+  function announcePreview(){
+    if(!live)return;
+    const lang=document.documentElement.lang||'en',copy=statusCopy[lang]||statusCopy.en;
+    const chosen=labels.map(k=>state[k]).filter(Boolean).join(', ');
+    live.textContent=`${copy[0]}. ${copy[1]} ${chosen} ${copy[2]}`;
   }
   function ensureInscriptionField(){
     const custom=labels[7]&&state[labels[7]]==='Custom inscription';
@@ -29,7 +38,7 @@
     (selected?.parentElement||content).appendChild(wrap);
     const input=wrap.querySelector('input');
     input.value=state.inscriptionText||'';
-    input.addEventListener('input',()=>{state.inscriptionText=input.value.slice(0,30);refreshPreview()});
+    input.addEventListener('input',()=>{state.inscriptionText=input.value.slice(0,30);refreshPreview();announcePreview()});
   }
   function refreshPreview(){
     Object.entries(state).forEach(([k,v])=>{if(v&&k!=='inscriptionText')card.dataset[k]=slug(v)});
@@ -59,10 +68,10 @@
     ensureInscriptionField();
   }
   const observer=new MutationObserver(refresh);observer.observe(content,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
-  content.addEventListener('click',()=>requestAnimationFrame(refresh));
-  document.getElementById('nextBtn')?.addEventListener('click',()=>requestAnimationFrame(refresh));
-  document.getElementById('backBtn')?.addEventListener('click',()=>requestAnimationFrame(refresh));
-  document.addEventListener('bandura:languagechange',localizeInscriptionField);
+  content.addEventListener('click',()=>requestAnimationFrame(()=>{refresh();announcePreview()}));
+  document.getElementById('nextBtn')?.addEventListener('click',()=>requestAnimationFrame(()=>{refresh();announcePreview()}));
+  document.getElementById('backBtn')?.addEventListener('click',()=>requestAnimationFrame(()=>{refresh();announcePreview()}));
+  document.addEventListener('bandura:languagechange',()=>{localizeInscriptionField();announcePreview()});
   refresh();
   const persistence=document.createElement('script');
   persistence.src='configurator-persistence.js';
