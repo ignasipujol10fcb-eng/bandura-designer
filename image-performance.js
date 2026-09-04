@@ -18,4 +18,18 @@
     section.style.contentVisibility = 'auto';
     if (!section.style.containIntrinsicSize) section.style.containIntrinsicSize = '650px';
   });
+
+  // Warm the second real bandura photograph only when the browser is idle. This
+  // keeps the hero fast while making the editorial/gallery image feel immediate
+  // when a visitor scrolls to it.
+  const galleryImage = document.querySelector('.editorial-photo img');
+  if (galleryImage && galleryImage.src) {
+    const warm = () => {
+      const img = new Image();
+      img.decoding = 'async';
+      img.src = galleryImage.currentSrc || galleryImage.src;
+    };
+    if ('requestIdleCallback' in window) window.requestIdleCallback(warm, { timeout: 2500 });
+    else window.setTimeout(warm, 1800);
+  }
 })();
