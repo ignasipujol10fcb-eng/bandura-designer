@@ -94,4 +94,16 @@
   addPerformancePhoto();
   update(document.documentElement.lang || 'en');
   document.addEventListener('bandura:languagechange', (event) => update(event.detail?.lang || document.documentElement.lang || 'en'));
+
+  /* The configurator rewrites the preview alt text whenever a choice changes.
+     Keep that dynamic text localized instead of allowing it to revert to English. */
+  const preview = document.getElementById('previewImage');
+  if (preview) {
+    const altObserver = new MutationObserver(() => {
+      const lang = document.documentElement.lang || 'en';
+      const localized = (copy[lang] || copy.en).preview;
+      if (preview.alt !== localized) preview.alt = localized;
+    });
+    altObserver.observe(preview, { attributes: true, attributeFilter: ['alt'] });
+  }
 })();
