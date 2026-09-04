@@ -1,4 +1,4 @@
-/* Keep below-the-fold bandura imagery from competing with the hero for the first network slot. */
+/* Keep below-the-fold bandura imagery and editorial sections from competing with the hero for the first render. */
 (() => {
   const preview = document.getElementById('previewImage');
   if (!preview) return;
@@ -9,4 +9,13 @@
   preview.loading = 'lazy';
   preview.decoding = 'async';
   preview.removeAttribute('fetchpriority');
+
+  // Defer layout/paint work for sections that are initially far below the fold.
+  // Intrinsic sizes preserve the page geometry and prevent layout jumps while
+  // the browser skips rendering work until each section approaches the viewport.
+  const deferred = document.querySelectorAll('.editorial-image,.features,.bespoke,.quote-band,.gallery,.contact,footer');
+  deferred.forEach(section => {
+    section.style.contentVisibility = 'auto';
+    if (!section.style.containIntrinsicSize) section.style.containIntrinsicSize = '650px';
+  });
 })();
