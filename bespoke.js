@@ -11,7 +11,7 @@
     ja:{title:'あなたのバンドゥーラについて',photo:'参考写真',desc:'説明',placeholder:'木材、形、色、装飾、電子機器など、思い描いていることをお聞かせください。',send:'問い合わせを送る',cancel:'キャンセル',note:'対応デバイスでは写真と説明を一緒に共有できます。それ以外ではメールを開き、写真を添付してください。',name:'お名前',email:'メール',close:'閉じる'},
     he:{title:'ספרו לנו על הבנדורה שלכם',photo:'תמונת השראה',desc:'תיאור',placeholder:'ספרו לנו על העץ, הצורה, הצבעים, העיטור, האלקטרוניקה או כל פרט אחר שאתם מדמיינים.',send:'שליחת בקשה',cancel:'ביטול',note:'במכשירים נתמכים אפשר לשתף את התמונה והתיאור יחד. אחרת תיפתח אפליקציית הדוא״ל כדי לצרף את התמונה.',name:'השם שלכם',email:'הדוא״ל שלכם',close:'סגירה'}
   };
-  let modal;
+  let modal,lastTrigger=null;
   function t(){return copy[document.documentElement.lang]||copy.en}
   function build(){
     if(modal)return;
@@ -20,11 +20,13 @@
     modal.innerHTML='<div class="bespoke-dialog"><button class="bespoke-close" type="button"></button><span class="section-no bespoke-modal-label"></span><h2 class="bespoke-modal-title" id="bespokeModalTitle"></h2><label class="bespoke-field"><span class="bespoke-photo-label"></span><input id="bespokePhoto" type="file" accept="image/*"><small class="bespoke-file-name"></small></label><label class="bespoke-field"><span class="bespoke-name-label"></span><input id="bespokeName" type="text" autocomplete="name"></label><label class="bespoke-field"><span class="bespoke-email-label"></span><input id="bespokeEmail" type="email" autocomplete="email"></label><label class="bespoke-field"><span class="bespoke-desc-label"></span><textarea id="bespokeDescription" rows="6"></textarea></label><p class="bespoke-note" id="bespokeModalNote"></p><div class="bespoke-actions"><button class="btn bespoke-cancel" type="button"></button><button class="btn primary bespoke-send" type="button"></button></div></div>';
     document.body.appendChild(modal);
     const file=modal.querySelector('#bespokePhoto');file.addEventListener('change',()=>{modal.querySelector('.bespoke-file-name').textContent=file.files[0]?.name||''});
-    modal.querySelector('.bespoke-close').onclick=close;modal.querySelector('.bespoke-cancel').onclick=close;modal.addEventListener('click',e=>{if(e.target===modal)close()});modal.querySelector('.bespoke-send').onclick=send;
+    modal.querySelector('.bespoke-close').onclick=close;modal.querySelector('.bespoke-cancel').onclick=close;modal.addEventListener('click',e=>{if(e.target===modal)close()});modal.querySelector('.bespoke-send').onclick=send;modal.addEventListener('keydown',trapFocus);
   }
   function paint(){const x=t();modal.querySelector('.bespoke-modal-label').textContent='BESPOKE SERVICE';modal.querySelector('.bespoke-modal-title').textContent=x.title;modal.querySelector('.bespoke-photo-label').textContent=x.photo;modal.querySelector('.bespoke-name-label').textContent=x.name;modal.querySelector('.bespoke-email-label').textContent=x.email;modal.querySelector('.bespoke-desc-label').textContent=x.desc;modal.querySelector('#bespokeDescription').placeholder=x.placeholder;modal.querySelector('.bespoke-note').textContent=x.note;modal.querySelector('.bespoke-cancel').textContent=x.cancel;modal.querySelector('.bespoke-send').textContent=x.send;modal.querySelector('.bespoke-close').setAttribute('aria-label',x.close)}
-  function open(e){if(e)e.preventDefault();build();paint();modal.hidden=false;document.body.classList.add('modal-open');setTimeout(()=>modal.querySelector('#bespokeDescription').focus(),20)}
-  function close(){if(!modal)return;modal.hidden=true;document.body.classList.remove('modal-open')}
+  function getFocusable(){return [...modal.querySelectorAll('button,input,textarea,[href],[tabindex]:not([tabindex="-1"])')].filter(el=>!el.disabled&&el.offsetParent!==null)}
+  function trapFocus(e){if(e.key!=='Tab')return;const focusable=getFocusable();if(!focusable.length)return;const first=focusable[0],last=focusable[focusable.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}
+  function open(e){if(e)e.preventDefault();build();lastTrigger=e?.currentTarget||document.activeElement;paint();modal.hidden=false;document.body.classList.add('modal-open');setTimeout(()=>modal.querySelector('#bespokeDescription').focus(),20)}
+  function close(){if(!modal)return;modal.hidden=true;document.body.classList.remove('modal-open');if(lastTrigger&&document.contains(lastTrigger))setTimeout(()=>lastTrigger.focus(),0)}
   async function send(){
     const file=modal.querySelector('#bespokePhoto').files[0],name=modal.querySelector('#bespokeName').value.trim(),email=modal.querySelector('#bespokeEmail').value.trim(),desc=modal.querySelector('#bespokeDescription').value.trim();
     if(!desc&&!file){modal.querySelector('#bespokeDescription').focus();return}
