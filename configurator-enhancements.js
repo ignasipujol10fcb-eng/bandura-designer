@@ -11,6 +11,7 @@
   const escapeHtml=v=>String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   const inscriptionCopy={en:['Personal inscription','Up to 30 characters','Your text will appear on the live preview.'],es:['Inscripción personal','Hasta 30 caracteres','Tu texto aparecerá en la vista previa.'],uk:['Особистий напис','До 30 символів','Ваш текст з’явиться у попередньому перегляді.'],it:['Incisione personale','Fino a 30 caratteri','Il testo apparirà nell’anteprima.'],fr:['Inscription personnelle','30 caractères maximum','Votre texte apparaîtra dans l’aperçu.'],de:['Persönliche Gravur','Bis zu 30 Zeichen','Ihr Text erscheint in der Live-Vorschau.'],zh:['个性刻字','最多30个字符','文字会显示在实时预览中。'],ja:['パーソナル刻印','30文字まで','入力した文字がプレビューに表示されます。'],he:['חריטה אישית','עד 30 תווים','הטקסט יופיע בתצוגה המקדימה.']};
   const statusCopy={en:['Preview updated','Your live bandura preview now reflects','choices.'],es:['Vista previa actualizada','La vista previa de tu bandura ahora refleja','decisiones.'],uk:['Попередній перегляд оновлено','Попередній перегляд бандури враховує','виборів.'],it:['Anteprima aggiornata','L’anteprima della tua bandura ora riflette','scelte.'],fr:['Aperçu mis à jour','L’aperçu de votre bandura reflète maintenant','choix.'],de:['Vorschau aktualisiert','Die Live-Vorschau Ihrer Bandura berücksichtigt jetzt','Auswahlen.'],zh:['预览已更新','实时预览现已反映您的','项选择。'],ja:['プレビューを更新しました','バンドゥーラのライブプレビューに選択した','項目が反映されました。'],he:['התצוגה המקדימה עודכנה','התצוגה המקדימה של הבנדורה משקפת כעת את','הבחירות.']};
+  const previewAltCopy={en:['Live bandura preview','Selected design:'],es:['Vista previa de la bandura','Diseño seleccionado:'],uk:['Попередній перегляд бандури','Обраний дизайн:'],it:['Anteprima della bandura','Design selezionato:'],fr:['Aperçu de la bandura','Design sélectionné :'],de:['Live-Vorschau der Bandura','Ausgewähltes Design:'],zh:['实时班杜拉预览','已选设计：'],ja:['バンドゥーラのライブプレビュー','選択したデザイン：'],he:['תצוגה מקדימה של הבנדורה','עיצוב שנבחר:']};
   function localizeInscriptionField(){
     const wrap=document.getElementById('customInscriptionField');
     if(!wrap)return;
@@ -59,7 +60,9 @@
     const finishFilters={natural:'',honey:'brightness(1.02) saturate(1.12)','dark-walnut':'brightness(.76) contrast(1.06)',black:'grayscale(.65) brightness(.58) contrast(1.12)'};
     const filter=`${woodFilters[slug(state.wood)]||''} ${finishFilters[slug(state.finish)]||''}`.trim();
     image.style.filter=filter||'';
-    image.alt=state.model?`Bandura live preview — ${[state.model,state.strings,state.wood,state.finish].filter(Boolean).join(', ')}`:'Live bandura preview';
+    const lang=document.documentElement.lang||'en',altCopy=previewAltCopy[lang]||previewAltCopy.en;
+    const selectedDesign=[state.model,state.strings,state.wood,state.finish].filter(Boolean).join(', ');
+    image.alt=selectedDesign?`${altCopy[0]} — ${altCopy[1]} ${selectedDesign}`:altCopy[0];
   }
   function refresh(){
     const selected=content.querySelector('.choice.selected'),stepText=document.getElementById('stepCounter')?.textContent||'',index=Math.max(0,parseInt(stepText,10)-1);
@@ -71,7 +74,7 @@
   content.addEventListener('click',()=>requestAnimationFrame(()=>{refresh();announcePreview()}));
   document.getElementById('nextBtn')?.addEventListener('click',()=>requestAnimationFrame(()=>{refresh();announcePreview()}));
   document.getElementById('backBtn')?.addEventListener('click',()=>requestAnimationFrame(()=>{refresh();announcePreview()}));
-  document.addEventListener('bandura:languagechange',()=>{localizeInscriptionField();announcePreview()});
+  document.addEventListener('bandura:languagechange',()=>{localizeInscriptionField();refreshPreview();announcePreview()});
   refresh();
   const persistence=document.createElement('script');
   persistence.src='configurator-persistence.js';
