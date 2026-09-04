@@ -13,3 +13,21 @@
 .instrument-card[data-wood][data-finish="dark-walnut"]::before{filter:sepia(.22) saturate(.92) brightness(.72) contrast(1.08) drop-shadow(15px 22px 22px #0009)}
 .instrument-card[data-wood][data-finish="black"]::before{filter:grayscale(.68) brightness(.55) contrast(1.12) drop-shadow(15px 22px 22px #0009)}
 @media(prefers-reduced-motion:reduce){.instrument-card::before{transition:none}}
+
+/* Stronger, physically legible live-preview treatments for every core configurator choice. */
+.instrument-card[data-model="professional"]::before{transform:scale(.97) translateY(5px)}
+.instrument-card[data-model="master"]::before{transform:scale(1.04) translateY(-4px)}
+.instrument-card[data-model="concert"]::after,.instrument-card[data-model="professional"]::after,.instrument-card[data-model="master"]::after{content:'';position:absolute;pointer-events:none;z-index:2}
+.instrument-card[data-model="concert"]::after{inset:16px;border:1px solid #ffffff10}
+.instrument-card[data-model="professional"]::after{inset:12px;border:1px solid #c39a6030;box-shadow:inset 0 0 0 1px #ffffff08}
+.instrument-card[data-model="master"]::after{inset:8px;border:1px solid #c39a6055;box-shadow:inset 0 0 0 1px #c39a6015}
+.instrument-card[data-strings="55-strings"] .preview-string-field{width:35%;opacity:.22}
+.instrument-card[data-strings="64-strings"] .preview-string-field{width:42%;opacity:.3}
+.instrument-card[data-strings="68-strings"] .preview-string-field{width:49%;opacity:.38}
+.preview-string-field{position:absolute;left:50%;top:13%;width:42%;height:72%;transform:translateX(-50%);background:repeating-linear-gradient(90deg,transparent 0 4px,#f5dfae 4.7px 5.4px,transparent 6px 9px);opacity:.3;mix-blend-mode:screen;mask-image:linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent);-webkit-mask-image:linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent);pointer-events:none;z-index:5;transition:opacity .35s,width .35s}
+.instrument-card[data-electronics="acoustic-pickup"] .preview-pickup,.instrument-card[data-electronics="studio-system"] .preview-pickup{left:50%;bottom:22%;width:76px;height:12px;transform:translateX(-50%);border:1px solid #e2c58c88;background:#171511bb;box-shadow:0 0 18px #c39a6030;z-index:6}
+.instrument-card[data-electronics="studio-system"] .preview-pickup{width:92px}
+.instrument-card[data-electronics="acoustic-pickup"] .preview-pickup i,.instrument-card[data-electronics="studio-system"] .preview-pickup i{display:block;width:8px;height:8px;margin:1px auto;border-radius:50%;background:#d4b579;box-shadow:0 0 10px #d4b579aa}
+.instrument-card[data-case="soft-case"] .preview-case{inset:18px;border-style:dashed;border-color:#c8bda855;border-radius:12px}
+.instrument-card[data-case="hard-case"] .preview-case{inset:8px;border:2px solid #e0c28b66;border-radius:12px;box-shadow:inset 0 0 0 5px #15130f22,inset 0 0 35px #0006}
+@media(prefers-reduced-motion:reduce){.preview-string-field{transition:none}}
