@@ -88,10 +88,6 @@
   keyboard.src='configurator-keyboard.js';
   keyboard.defer=true;
   document.body.appendChild(keyboard);
-  const performance=document.createElement('script');
-  performance.src='image-performance.js';
-  performance.defer=true;
-  document.body.appendChild(performance);
 
   // Keep the Hebrew (RTL) configurator visually directional while leaving all other locales untouched.
   const rtlStyle=document.createElement('style');
