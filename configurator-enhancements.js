@@ -92,4 +92,9 @@
   performance.src='image-performance.js';
   performance.defer=true;
   document.body.appendChild(performance);
+
+  // Keep the Hebrew (RTL) configurator visually directional while leaving all other locales untouched.
+  const rtlStyle=document.createElement('style');
+  rtlStyle.textContent='[dir="rtl"] .designer-grid{grid-template-columns:380px 1fr 205px}[dir="rtl"] .steps{border-right:0;border-left:1px solid #ffffff18}[dir="rtl"] .choice:hover,[dir="rtl"] .choice.selected{transform:translateX(-2px)}[dir="rtl"] .preview-badges{left:auto;right:18px}[dir="rtl"] .config-footer{flex-direction:row-reverse}[dir="rtl"] .config-footer .next span:last-child{transform:scaleX(-1)}[dir="rtl"] .config-footer .back{transform:scaleX(-1)}@media(max-width:900px){[dir="rtl"] .steps{border-left:0}[dir="rtl"] .config-footer{flex-direction:row!important}[dir="rtl"] .preview-badges{right:12px}}';
+  document.head.appendChild(rtlStyle);
 })();
